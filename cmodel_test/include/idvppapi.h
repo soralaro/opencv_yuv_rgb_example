@@ -1,0 +1,43 @@
+/**
+ * Copyright (C) 2018. Huawei Technologies Co., Ltd. All rights reserved.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ */
+
+#ifndef DVPP_IDVPPAPI_H
+#define DVPP_IDVPPAPI_H
+
+#include "dvpp_config.h"
+#include "ivpcapi.h"
+#include "ivdecapi.h"
+#include "idvppcapability.h"
+#include "export_macro.h"
+#include <stdlib.h>
+
+class IVPCAPI;
+class IVDECAPI;
+class IDVPPAPI;
+class IDVPPCAPABILITY;
+
+DVPP_EXPORT int CreateDvppApi(IDVPPAPI*& pIDVPPAPI);
+DVPP_EXPORT int DvppCtl(IDVPPAPI*& pIDVPPAPI, int CMD, dvppapi_ctl_msg* MSG);
+DVPP_EXPORT int DestroyDvppApi(IDVPPAPI*& pIDVPPAPI);
+
+DVPP_EXPORT int CreateVdecApi(IDVPPAPI*& pIDVPPAPI, int singleton);
+DVPP_EXPORT int VdecCtl(IDVPPAPI*& pIDVPPAPI, int CMD, dvppapi_ctl_msg* MSG, int singleton);
+DVPP_EXPORT int DestroyVdecApi(IDVPPAPI*& pIDVPPAPI, int singleton);
+
+DVPP_EXPORT int32_t DvppGetOutParameter(void* in, void* out, int32_t cmd);
+
+class IDVPPAPI {
+public:
+    virtual ~IDVPPAPI(void) {}
+
+    IVPCAPI* pIVPCAPI;
+    IVDECAPI* pIVDECAPI;
+    IDVPPCAPABILITY* pIDVPPCAPABILITY;
+};
+
+#endif // DVPP_IDVPPAPI_H

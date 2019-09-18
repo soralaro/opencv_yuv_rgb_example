@@ -1,0 +1,40 @@
+﻿1，可以参考sample代码：main.cpp和main.h进行编写
+2，使用vpc resize软实现功能调用方式和DVPP发布包版本VPC新接口调用方式，接口完全相同
+3，和DVPP vpc新接口相比，差别在于：
+    软实现输入格式和输出格式不同，软实现支持格式列表以枚举值形式表达如下：
+    // 支持的输入格式
+    enum VpcInputFormat {
+        INPUT_YUV400, // 0
+        INPUT_YUV420_SEMI_PLANNER_UV, // 1
+        INPUT_YUV420_SEMI_PLANNER_VU, // 2
+        INPUT_YUV422_SEMI_PLANNER_UV, // 3
+        INPUT_YUV422_SEMI_PLANNER_VU, // 4
+        INPUT_YUV444_SEMI_PLANNER_UV, // 5 注：还在开发中
+        INPUT_YUV444_SEMI_PLANNER_VU, // 6 注：还在开发中
+        INPUT_YUV420_PLANNER, // 7
+        INPUT_YUV422_PLANNER, // 8
+        INPUT_YUV444_PLANNER, // 9 注：还在开发中
+    };
+    // 支持的输出格式
+    enum VpcOutputFormat {
+        OUTPUT_YUV420SP_UV, // 0
+        OUTPUT_YUV420SP_VU, // 1
+        OUTPUT_RGB_PACKED, // 2
+        OUTPUT_BGR_PACKED // 3
+    };
+4，使用sample需要：1）编译 2）准备好测试文件 3）运行测试程序
+5，编译环境：Ubuntu16.04, gcc5.4
+
+# 编译命令：
+g++ -I include -c -fstack-protector-strong -std=c++11 -g -MD -MF out/main.d -o out/main.o ./main.cpp
+g++ -Wl,-rpath-link,./lib out/main.o -lDvpp_api -L./lib -o out/cmodel_test
+
+# 测试步骤：
+cd out
+export LD_LIBRARY_PATH=../lib/
+
+# 测试1：一张yuv420planer格式的图片缩放用例，输出rgb-packed格式
+./cmodel_test ../test_file/552x618.yuv420planner 7 552 618 ../test_file/result/224x224.rgb 2 224 224 0 551 0 617
+
+# 测试2：一张nv12格式的图片缩放用例，输出bgr-packed格式
+./cmodel_test ../test_file/1920x1080.nv12 1 1920 1080 ../test_file/result/224x224.bgr 3 224 224 0 1919 0 1079
